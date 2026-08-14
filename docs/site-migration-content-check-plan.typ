@@ -1,13 +1,13 @@
 #set document(
   title: [A plan for checking content after a site migration],
-  author: "Revketer LLC — Swoyam Pokharel",
+  author: "Revketer LLC",
 )
 
 #set page(
   paper: "a4",
   margin: (top: 1.65cm, bottom: 1.7cm, x: 2cm),
   header: align(left)[
-    #text(font: "Geist", size: 8pt, weight: "medium", fill: rgb("5d6470"))[Revketer LLC]
+    #text(font: "Geist", size: 8pt, weight: "light", fill: rgb("5d6470"))[Revketer LLC]
   ],
 )
 
@@ -27,7 +27,7 @@
   #v(1.55em)
   #line(length: 100%, stroke: (paint: rgb("cbd1d8"), thickness: 0.65pt))
   #v(0.7em)
-  #text(size: 15pt, weight: "bold", fill: rgb("171b22"))[#title]
+  #text(font: "Geist", size: 15pt, weight: "bold", tracking: -0.025em, fill: rgb("171b22"))[#title]
   #v(0.35em)
 ]
 
@@ -47,11 +47,10 @@
 )
 
 #v(1.15cm)
-#text(size: 27pt, weight: "bold", fill: rgb("12171e"))[A plan for checking content after a site migration]
+#text(font: "Geist", size: 27pt, weight: "bold", tracking: -0.035em, fill: rgb("12171e"))[A plan for checking content after a site migration]
 #v(0.6em)
-#text(size: 11.2pt, fill: rgb("4f5965"))[Revketer LLC — Swoyam Pokharel]
+#text(size: 11.2pt, fill: rgb("4f5965"))[Revketer LLC]
 #v(1.45em)
-#label([SITE CONTENT VALIDATION])
 
 #section([Context])
 
@@ -59,8 +58,6 @@
 
 
 #section([Current crawler and extraction])
-
-#label([CRAWL PIPELINE]) #h(0.6em) 
 
 The crawler seeds URLs from `robots.txt` sitemap declarations and `/sitemap.xml`, then follows de-duplicated, same-host internal links through a concurrent queue. It applies the configured depth and page limits. Raw HTML is extracted first. When the page appears to need JavaScript, Lightpanda can render it; rendered output is kept only when it contains better content.
 
@@ -122,13 +119,11 @@ The extractor records the final URL, status, content type, response size, select
 
 Visible text excludes `script`, `style`, and `noscript` content. It still includes shared page chrome.
 
-#pagebreak()
 
-#section([Actual PMsquare crawl evidence])
+#section([Example crawl run])
 
-The following record is from the crawl log for:
+The following is an example crawl:
 
-#link("https://pmsquare.com/resource/blogs/2024-8-12-an-overview-of-the-incorta-data-lineage-viewer/")[https://pmsquare.com/resource/blogs/2024-8-12-an-overview-of-the-incorta-data-lineage-viewer/]
 
 ```text
 status: 200 OK
@@ -172,6 +167,9 @@ page extraction: 0ns
 Lightpanda rendered: false
 ```
 
+Find the full crawl at: https://github.com/PS-Wizard/SiteSherlock/blob/main/pmsquare_log.zst
+
+
 #section([Crawl speed])
 
 These are release-binary runs on an AMD Ryzen 7 8845HS machine with 8 cores, 16 threads, and about 14 GiB RAM. Neither run used Lightpanda.
@@ -192,6 +190,7 @@ The PMsquare run produced 1,093 successful HTML pages, 70 responses with status 
 
 Per-request timings can be summed to describe accumulated concurrent work, but that sum is not elapsed crawl time. Wall time is the end-to-end duration shown in the table; concurrent requests overlap.
 
+\
 #section([What current extraction can flag after snapshots exist])
 
 With two saved runs and a known old-to-new page pair, the current records can flag:
@@ -275,7 +274,7 @@ result: retained; report order change, not missing content
 
 Images, files, and embeds need real per-item records: source URL, alt text or label, caption where available, dimensions or media type, target URL, and source order. Aggregate image counts cannot produce this evidence.
 
-#section([Pilot questions / operational limits])
+#section([Further questions / operational limits])
 
 Before a production crawl, confirm the conditions that define an accurate comparison:
 
@@ -297,10 +296,14 @@ Before a production crawl, confirm the conditions that define an accurate compar
   [Migration map], [Is an authoritative moved, retired, merged, and split-page map available?],
 )
 
-
+\
+\
 #line(length: 100%, stroke: 0.4pt + luma(160))
 
+Feel free to look at what exists currently:
+
 - SiteSherlock: https://github.com/PS-Wizard/SiteSherlock
+
 
 Any and all contributions are welcome.
 
